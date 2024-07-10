@@ -12,6 +12,9 @@ export default async function Home() {
 			) : (
 				<a href="/api/auth/signin">Sign in</a>
 			)}
+			<a href="http://localhost:8080/unprotected">Hit an unprotected endpoint</a>
+			<a href="http://localhost:8080/protected">Hit a protected endpoint</a>
+
 			<pre>{JSON.stringify(session, null, 2)}</pre>
 		</main>
 	);
