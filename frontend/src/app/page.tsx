@@ -12,6 +12,9 @@ export default async function Home() {
 			) : (
 				<a href="/api/auth/signin">Sign in</a>
 			)}
+			<a href="http://localhost:8080/oauth2/authorization/github">Sign in with github</a>
+			<a href="http://localhost:8080/oauth2/authorization/google">Sign in with github</a>
+			<a href="http://localhost:8080/logout">Sign out</a>
 			<a href="http://localhost:8080/unprotected">Hit an unprotected endpoint</a>
 			<a href="http://localhost:8080/protected">Hit a protected endpoint</a>
 
