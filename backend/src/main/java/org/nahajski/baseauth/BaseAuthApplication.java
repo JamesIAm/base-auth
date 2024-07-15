@@ -1,4 +1,4 @@
-package com.jamesiam.baseauth;
+package org.nahajski.baseauth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

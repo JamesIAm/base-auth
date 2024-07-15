@@ -1,4 +1,4 @@
-package com.jamesiam.baseauth.security;
+package org.nahajski.baseauth.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

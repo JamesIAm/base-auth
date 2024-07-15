@@ -1,4 +1,4 @@
-package com.jamesiam.baseauth.controller;
+package org.nahajski.baseauth.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

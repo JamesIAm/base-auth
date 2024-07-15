@@ -1,4 +1,4 @@
-package com.jamesiam.baseauth;
+package org.nahajski.baseauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
