@@ -1,11 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { debug } from "console";
-import { stat } from "fs";
-import GoogleSignIn from "./GoogleSignIn";
-
-type Props = {};
 
 const Login = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
