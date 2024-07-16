@@ -1,12 +1,12 @@
-package org.nahajski.baseauth.controller;
+package org.nahajski.example.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ProtectedController {
-    @GetMapping("/protected")
+public class UnprotectedController {
+    @GetMapping("/public")
     private String sayHello() {
-        return "Hello from a protected endpoint";
+        return "Hello from an unprotected endpoint";
     }
 }

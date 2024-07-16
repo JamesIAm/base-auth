@@ -1,4 +1,4 @@
-package org.nahajski.baseauth.controller;
+package org.nahajski.example.controller;
 
 import org.nahajski.baseauth.entity.BaseOAuth2User;
 import org.nahajski.baseauth.entity.UserEntity;

@@ -1,4 +1,4 @@
-package org.nahajski.baseauth.controller;
+package org.nahajski.example.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

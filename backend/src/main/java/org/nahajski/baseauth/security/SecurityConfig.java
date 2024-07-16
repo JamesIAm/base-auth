@@ -21,10 +21,15 @@ public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final String frontendUrl;
+    private final String adminPattern;
+    private final String unauthenticatedPattern;
 
-    public SecurityConfig(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler, @Value("${baseauth.frontend.url}") String frontendUrl) {
+    public SecurityConfig(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler, @Value("${baseauth.frontend.url}") String frontendUrl,
+                          @Value("${baseauth.pattern.unauthenticated}") String unauthenticatedPattern, @Value("${baseauth.pattern.admin}") String adminPattern) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.frontendUrl = frontendUrl;
+        this.adminPattern = adminPattern;
+        this.unauthenticatedPattern = unauthenticatedPattern;
     }
 
 
@@ -32,18 +37,16 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(authorise ->
-                        authorise.requestMatchers("/unprotected").permitAll()
-                                .requestMatchers("/admin").hasRole(UserRole.ADMIN.toString())
+                .authorizeHttpRequests(
+                        authorise -> authorise.requestMatchers(adminPattern).hasRole(UserRole.ADMIN.toString())
+                                .requestMatchers(unauthenticatedPattern).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {
                     oauth2.successHandler(oAuth2LoginSuccessHandler);
                     oauth2.loginPage("/login").permitAll();
-                })
-                .exceptionHandling(exception -> {
+                }).exceptionHandling(exception -> {
                     exception.authenticationEntryPoint(new FailedAuthResponse());
-                })
-                .logout(logout -> logout.logoutSuccessHandler(new LogoutResponse()))
+                }).logout(logout -> logout.logoutSuccessHandler(new LogoutResponse()))
 
         ;
 
