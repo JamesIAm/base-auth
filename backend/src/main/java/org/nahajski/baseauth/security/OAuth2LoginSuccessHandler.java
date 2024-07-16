@@ -28,8 +28,6 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-
-    public static final String GOOGLE_NAME_ATTRIBUTE_KEY = "sub";
     public static final UserRole NEW_USER_ROLE = UserRole.USER;
 
     private final String frontendUrl;
@@ -43,15 +41,15 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
-        String oAuthProvider = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
+        OIDCProvider oAuthOIDCProvider = OIDCProvider.get(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
         DefaultOAuth2User principal = (DefaultOAuth2User) oAuth2AuthenticationToken.getPrincipal();
         String subject = principal.getName();
-        OauthIssuerSubject oauthIssuerSubject = new OauthIssuerSubject(oAuthProvider, subject);
+        OauthIssuerSubject oauthIssuerSubject = new OauthIssuerSubject(oAuthOIDCProvider.toLower(), subject);
         Optional<UserEntity> optionalUserEntity = userService.find(oauthIssuerSubject);
         var attributes = principal.getAttributes();
         String email = "";
         String name = "";
-        if (attributes != null ) {
+        if (attributes != null) {
             Object nullableEmail = attributes.getOrDefault("email", "");
             if (nullableEmail != null) {
                 email = nullableEmail.toString();
@@ -64,7 +62,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         }
         if (optionalUserEntity.isPresent()) {
             var userEntity = optionalUserEntity.get();
-            extracted(oAuthProvider, userEntity.getRole(), attributes, GOOGLE_NAME_ATTRIBUTE_KEY);
+            extracted(oAuthOIDCProvider, userEntity.getRole(), attributes);
             log.info("Name: " + name);
             log.info("Email: " + email);
         } else {
@@ -74,7 +72,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             user.setName(name);
             user.setOauthId(oauthIssuerSubject);
             userService.saveUser(user);
-            extracted(oAuthProvider, user.getRole(), attributes, GOOGLE_NAME_ATTRIBUTE_KEY);
+            extracted(oAuthOIDCProvider, user.getRole(), attributes);
 
         }
 
@@ -86,15 +84,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     }
 
-    private static void extracted(String oAuthProvider, UserRole userRole, Map<String, Object> attributes, String nameAttributeKey) {
-        if ("google".equals(oAuthProvider)) {
-            log.info("Google auth");
-            String authority = userRole.name();
-            DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(authority)), attributes, nameAttributeKey);//Find the relevant name attribute key authentication, principal, nameAttributeKey
-            Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(authority)), oAuthProvider);
-            SecurityContextHolder.getContext().setAuthentication(securityAuth);
-        } else if ("github".equals(oAuthProvider)) {
-            log.info("Github auth");
-        }
+    private static void extracted(OIDCProvider oAuthProvider, UserRole userRole, Map<String, Object> attributes) {
+        log.info(oAuthProvider + " auth");
+        String authority = userRole.name();
+        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(authority)), attributes, oAuthProvider.getNameAttributeKey());//Find the relevant name attribute key authentication, principal, nameAttributeKey
+        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(authority)), oAuthProvider.toLower());
+        SecurityContextHolder.getContext().setAuthentication(securityAuth);
     }
 }

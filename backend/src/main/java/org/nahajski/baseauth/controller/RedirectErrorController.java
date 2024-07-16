@@ -1,6 +1,5 @@
 package org.nahajski.baseauth.controller;
 
-import com.sun.net.httpserver.Headers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpHeaders;
