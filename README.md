@@ -1,11 +1,12 @@
 ## TODO
 - Get email from github
 - Create a create react app version for SPA's
-- Delete Users endpoint
-- Publish as a library
+- Delete getAllUsers endpoint (MAJOR)
 - Redirect back to calling page after login
 - Format userinfo endpoint
 - Add DTOs and DAOs
+- Publish to mvnrepo
+- Set up auto changelog and version increments
 
 ## Running Instructions
 #### Start the backend
