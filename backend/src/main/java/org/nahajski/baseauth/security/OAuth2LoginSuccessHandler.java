@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.nahajski.baseauth.entity.BaseOAuth2User;
 import org.nahajski.baseauth.entity.OAuthIssuerSubject;
 import org.nahajski.baseauth.entity.UserEntity;
 import org.nahajski.baseauth.entity.UserRole;
@@ -46,11 +47,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         String email = getNullableAttribute(attributes, "email");
         String name = getNullableAttribute(attributes, "name");
         if (optionalUserEntity.isPresent()) {
-            var userEntity = optionalUserEntity.get();
-            setSecurityContextAuth(oAuthOIDCProvider, userEntity.getRole(), attributes);
+            var user = optionalUserEntity.get();
+            setSecurityContextAuth(user, attributes);
         } else {
             UserEntity user = createAndSaveUser(email, name, oAuthIssuerSubject);
-            setSecurityContextAuth(oAuthOIDCProvider, user.getRole(), attributes);
+            setSecurityContextAuth(user, attributes);
 
         }
 
@@ -83,10 +84,12 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         return email;
     }
 
-    private static void setSecurityContextAuth(OIDCProvider oAuthProvider, UserRole userRole, Map<String, Object> attributes) {
-        log.info("logged in with %s OIDC auth".formatted(oAuthProvider));
-        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(userRole), attributes, oAuthProvider.getNameAttributeKey());//Find the relevant name attribute key authentication, principal, nameAttributeKey
-        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(userRole), oAuthProvider.toLower());
+    private static void setSecurityContextAuth(UserEntity user, Map<String, Object> attributes) {
+        OIDCProvider provider = user.getOauthId().getIss();
+        log.info("logged in with %s OIDC auth".formatted(provider));
+        List<UserRole> authorities = List.of(user.getRole());
+        DefaultOAuth2User newUser = new BaseOAuth2User(authorities, attributes, provider.getNameAttributeKey(), user);//Find the relevant name attribute key authentication, principal, nameAttributeKey
+        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, authorities, provider.toString());
         SecurityContextHolder.getContext().setAuthentication(securityAuth);
     }
 }

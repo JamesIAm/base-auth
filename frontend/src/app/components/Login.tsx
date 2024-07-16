@@ -65,6 +65,16 @@ const Login = () => {
 		});
 	};
 
+	const getUserInfo = async () => {
+		const response = await fetch("http://localhost:8080/userinfo", {
+			method: "GET",
+			credentials: "include",
+		}).then((response) => {
+			takeResponseAndCheckForUnauthenticated(response);
+			return response;
+		});
+	};
+
 	const takeResponseAndCheckForUnauthenticated = (response: Response) => {
 		if (response.status === 403 || response.status === 401) {
 			checkIfLoggedIn();
@@ -85,6 +95,7 @@ const Login = () => {
 			<div onClick={() => getUnprotected()}>getUnprotected</div>
 			<div onClick={() => getAdmin()}>getAdmin</div>
 			<div onClick={() => getUsers()}>getUsers</div>
+			<div onClick={() => getUserInfo()}>getUserInfo</div>
 
 			{isLoggedIn ? (
 				<div onClick={() => logout()}>logout</div>

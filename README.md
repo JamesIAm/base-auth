@@ -1,9 +1,11 @@
 ## TODO
-- Return the user details to the frontend (name and email)
 - Get email from github
 - Create a create react app version for SPA's
 - Delete Users endpoint
-
+- Publish as a library
+- Redirect back to calling page after login
+- Format userinfo endpoint
+- Add DTOs and DAOs
 
 ## Running Instructions
 #### Start the backend
