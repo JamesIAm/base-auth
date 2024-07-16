@@ -1,7 +1,6 @@
 ## TODO
 - Get email from github
 - Create a create react app version for SPA's
-- Delete getAllUsers endpoint (MAJOR)
 - Redirect back to calling page after login
 - Format userinfo endpoint
 - Add DTOs and DAOs
@@ -55,6 +54,9 @@ public class Main {
 baseauth:
   frontend:
     url: http://localhost:3000
+  pattern:
+    unauthenticated: "/public/**"
+    admin: "/admin/**"
 spring:
   profiles:
     active: baseauth
@@ -91,6 +93,15 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console.enabled: true
+```
+##### TODO: Patterns
+Everything not matching either of these will need a standard user role
+(the default when someone new signs in)
+```yaml
+baseauth:
+  pattern:
+    unauthenticated: "/public/**"
+    admin: "/admin/**"
 ```
 ##### spring.active.profiles
 To pick up the application yaml that is defined in the 

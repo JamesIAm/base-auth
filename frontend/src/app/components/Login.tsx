@@ -37,7 +37,7 @@ const Login = () => {
 	};
 
 	const getUnprotected = async () => {
-		const response = await fetch("http://localhost:8080/unprotected", {
+		const response = await fetch("http://localhost:8080/public", {
 			method: "GET",
 		}).then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
@@ -56,7 +56,7 @@ const Login = () => {
 	};
 
 	const getAdmin = async () => {
-		const response = await fetch("http://localhost:8080/admin", {
+		const response = await fetch("http://localhost:8080/admin/asd", {
 			method: "GET",
 			credentials: "include",
 		}).then((response) => {

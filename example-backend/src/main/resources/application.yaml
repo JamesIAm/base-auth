@@ -1,6 +1,9 @@
 baseauth:
   frontend:
     url: http://localhost:3000
+  pattern:
+    unauthenticated: "/public/**"
+    admin: "/admin/**"
 spring:
   profiles:
     active: baseauth
@@ -13,3 +16,10 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console.enabled: true
+
+# Uncomment to debug
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: TRACE
