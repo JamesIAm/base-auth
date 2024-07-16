@@ -73,5 +73,4 @@ out/
 ### VS Code ###
 .vscode/
 
-
-**application.yaml
+.env.secret
