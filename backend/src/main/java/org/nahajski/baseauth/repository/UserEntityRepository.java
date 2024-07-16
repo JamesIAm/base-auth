@@ -1,11 +1,8 @@
 package org.nahajski.baseauth.repository;
 
-import org.apache.catalina.User;
+import org.nahajski.baseauth.entity.OauthIssuerSubject;
 import org.nahajski.baseauth.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
-
-public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByEmail(String email);
+public interface UserEntityRepository extends JpaRepository<UserEntity, OauthIssuerSubject> {
 }

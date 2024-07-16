@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.nahajski.baseauth.entity.OauthIssuerSubject;
 import org.nahajski.baseauth.entity.UserEntity;
 import org.nahajski.baseauth.entity.UserRole;
 import org.nahajski.baseauth.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
@@ -28,6 +30,7 @@ import java.util.Optional;
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     public static final String GOOGLE_NAME_ATTRIBUTE_KEY = "sub";
+    public static final UserRole NEW_USER_ROLE = UserRole.USER;
 
     private final String frontendUrl;
     private final UserService userService;
@@ -40,27 +43,39 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
-        String name = oAuth2AuthenticationToken.getPrincipal().getName();
-        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
-        String email = attributes.get("email").toString();
         String oAuthProvider = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
-        if (StringUtils.isEmpty(email)) {
-            throw new UserPrincipalNotFoundException(null);
+        DefaultOAuth2User principal = (DefaultOAuth2User) oAuth2AuthenticationToken.getPrincipal();
+        String subject = principal.getName();
+        OauthIssuerSubject oauthIssuerSubject = new OauthIssuerSubject(oAuthProvider, subject);
+        Optional<UserEntity> optionalUserEntity = userService.find(oauthIssuerSubject);
+        var attributes = principal.getAttributes();
+        String email = "";
+        String name = "";
+        if (attributes != null ) {
+            Object nullableEmail = attributes.getOrDefault("email", "");
+            if (nullableEmail != null) {
+                email = nullableEmail.toString();
+            }
+//            email = nullableEmail.toString();
+
+            Object nullableName = attributes.getOrDefault("name", "");
+            if (nullableName != null) {
+                name = nullableName.toString();
+            }
         }
-        Optional<UserEntity> optionalUserEntity = userService.findByEmail(email);
         if (optionalUserEntity.isPresent()) {
             var userEntity = optionalUserEntity.get();
-            extracted(oAuthProvider, userEntity.getRole(), attributes, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), GOOGLE_NAME_ATTRIBUTE_KEY);
-            //Create user and add to user security context
+            extracted(oAuthProvider, userEntity.getRole(), attributes, GOOGLE_NAME_ATTRIBUTE_KEY);
             log.info("Name: " + name);
             log.info("Email: " + email);
         } else {
             UserEntity user = new UserEntity();
-            user.setRole(UserRole.USER);
+            user.setRole(NEW_USER_ROLE);
             user.setEmail(email);
             user.setName(name);
+            user.setOauthId(oauthIssuerSubject);
             userService.saveUser(user);
-            extracted(oAuthProvider, user.getRole(), attributes, oAuth2AuthenticationToken.getAuthorizedClientRegistrationId(), GOOGLE_NAME_ATTRIBUTE_KEY);
+            extracted(oAuthProvider, user.getRole(), attributes, GOOGLE_NAME_ATTRIBUTE_KEY);
 
         }
 
@@ -72,11 +87,12 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     }
 
-    private static void extracted(String oAuthProvider, UserRole userRole, Map<String, Object> attributes, String provider, String nameAttributeKey) {
+    private static void extracted(String oAuthProvider, UserRole userRole, Map<String, Object> attributes, String nameAttributeKey) {
         if ("google".equals(oAuthProvider)) {
             log.info("Google auth");
-            DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(userRole.name())), attributes, nameAttributeKey);//Find the relevant name attribute key authentication, principal, nameAttributeKey
-            Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority("user")), provider);
+            String authority = userRole.name();
+            DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(authority)), attributes, nameAttributeKey);//Find the relevant name attribute key authentication, principal, nameAttributeKey
+            Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(authority)), oAuthProvider);
             SecurityContextHolder.getContext().setAuthentication(securityAuth);
         } else if ("github".equals(oAuthProvider)) {
             log.info("Github auth");
