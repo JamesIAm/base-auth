@@ -56,7 +56,6 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             if (nullableEmail != null) {
                 email = nullableEmail.toString();
             }
-//            email = nullableEmail.toString();
 
             Object nullableName = attributes.getOrDefault("name", "");
             if (nullableName != null) {
