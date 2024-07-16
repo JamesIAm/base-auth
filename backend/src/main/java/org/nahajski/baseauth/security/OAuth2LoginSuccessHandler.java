@@ -64,20 +64,15 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         }
 
-        this.
+        this.setAlwaysUseDefaultTargetUrl(true);
+        this.setDefaultTargetUrl(frontendUrl);
 
-                setAlwaysUseDefaultTargetUrl(true);
-        this.
-
-                setDefaultTargetUrl(frontendUrl);
-        super.
-
-                onAuthenticationSuccess(request, response, authentication);
+        response.addCookie(new LoggedInCookie(true));
+        super.onAuthenticationSuccess(request, response, authentication);
 
     }
 
-    private static void extracted(String oAuthProvider, UserRole userRole
-            , Map<String, Object> attributes, String provider, String nameAttributeKey) {
+    private static void extracted(String oAuthProvider, UserRole userRole, Map<String, Object> attributes, String provider, String nameAttributeKey) {
         if ("google".equals(oAuthProvider)) {
             log.info("Google auth");
             DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(userRole.name())), attributes, nameAttributeKey);//Find the relevant name attribute key authentication, principal, nameAttributeKey
