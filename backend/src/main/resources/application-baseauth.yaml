@@ -2,8 +2,6 @@ spring:
   security:
     oauth2:
       client:
-        frontend:
-          url: "http://localhost:3000"
         registration:
           github:
             client-id: ${GITHUB_CLIENT_ID}

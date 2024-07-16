@@ -1,6 +1,7 @@
 package org.nahajski.baseauth.security;
 
 import org.nahajski.baseauth.entity.UserRole;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,9 +20,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final String frontendUrl;
 
-    public SecurityConfig(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
+    public SecurityConfig(OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler, @Value("${baseauth.frontend.url}") String frontendUrl) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.frontendUrl = frontendUrl;
     }
 
 
@@ -50,7 +53,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of(frontendUrl));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

@@ -16,13 +16,91 @@
 ```pnpm -C frontend dev```
 
 ## Setup instructions
-### Package
-1. Refactor rename baseauth to something else
-2. Go into settings.gradle and change the rootProject.name
+### Adding base auth to a project
+1. Add the following plugins to the build.gradle
+```groovy
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+```
+2. Add the following dependencies:
+```groovy
+dependencies {
+    //...
+    implementation("org.nahajski:baseauth:0.0.1")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+```
+3. Import the BaseAuthSharedConfiguration in your SpringBootApplication main file e.g:
+```java 
+@SpringBootApplication
+@Import(BaseAuthSharedConfiguration.class)
+public class Main {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+    }
+}
+```
+4. Create the config as defined in [Setting up config](#Setting-up-config)
+5. When moving to prod, look to override
 
-### OAuth2 OIDC providers
-Create a file called `.env.secret` in the same director as the readme
-It's contents should be as follows:
+### Setting up config
+#### application configuration
+
+##### TL;DR - Set you application.yaml to the following:
+```yaml
+baseauth:
+  frontend:
+    url: http://localhost:3000
+spring:
+  profiles:
+    active: baseauth
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+```
+##### Frontend URL
+To ensure the authentication redirects you back to your frontend,
+ensure you set the `baseauth.frontend.url` field in your application.yaml
+```yaml
+baseauth:
+  frontend:
+    url: <FRONTEND_URL>
+```
+For testing `<FRONTEND_URL>` will likely be `http://localhost:3000`
+
+##### TODO: database readme
+rn solution is add this too application.yaml:
+```properties
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+```
+##### spring.active.profiles
+To pick up the application yaml that is defined in the 
+base project set the active profiles to inclue `baseauth`
+```yaml
+spring:
+  profiles:
+    active: baseauth
+```
+#### .env.secret
+Create a file called `.env.secret` in your repo
 ```properties
 GOOGLE_CLIENT_ID=<GOOGLE_CLIENT_ID>
 GOOGLE_CLIENT_SECRET=<GOOGLE_CLIENT_SECRET>
@@ -30,9 +108,7 @@ GITHUB_CLIENT_ID=<GITHUB_CLIENT_ID>
 GITHUB_CLIENT_SECRET=<GITHUB_CLIENT_SECRET>
 ```
 
-When running the Application, ensure you include the `.env.secret` file as an 
-Environment Variable source in the Intellij run configuration. There is an example commited
-but the path is specific to my machine
+When running the Application, ensure you both `.env` files as Environment Variable sources in the Intellij run configuration.
 ### Google
 To generate the client ID and secret for google:
 1. Go to https://console.cloud.google.com/apis/dashboard
@@ -74,3 +150,10 @@ To generate the client ID and secret for github
 
 https://console.cloud.google.com/cloud-resource-manager
 Go to this link, and delete
+
+### Accessing Config directly
+
+Rather than using environment variables feel free to change the app properties directly
+
+Overriding the properties from [application.yaml](./backend/src/main/resources/application.yaml) should take precedence
+over the values which are currently looking for env var values.

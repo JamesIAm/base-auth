@@ -30,7 +30,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     private final String frontendUrl;
     private final UserService userService;
 
-    public OAuth2LoginSuccessHandler(UserService userService, @Value("${spring.security.oauth2.client.frontend.url}") String frontendUrl) {
+    public OAuth2LoginSuccessHandler(UserService userService, @Value("${baseauth.frontend.url}") String frontendUrl) {
         this.userService = userService;
         this.frontendUrl = frontendUrl;
     }
