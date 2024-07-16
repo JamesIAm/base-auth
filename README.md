@@ -2,7 +2,7 @@
 - Return the user details to the frontend (name and email)
 - Get email from github
 - Create a create react app version for SPA's
-- Add admin only endpoint
+- Delete Users endpoint
 
 
 ## Running Instructions

@@ -1,5 +1,6 @@
 package org.nahajski.baseauth.security;
 
+import org.nahajski.baseauth.entity.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorise ->
-                        authorise.requestMatchers("/unprotected").permitAll().anyRequest().authenticated())
+                        authorise.requestMatchers("/unprotected").permitAll()
+                                .requestMatchers("/admin").hasRole(UserRole.ADMIN.toString())
+                                .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {
                     oauth2.successHandler(oAuth2LoginSuccessHandler);
                     oauth2.loginPage("/login").permitAll();

@@ -55,6 +55,16 @@ const Login = () => {
 		});
 	};
 
+	const getAdmin = async () => {
+		const response = await fetch("http://localhost:8080/admin", {
+			method: "GET",
+			credentials: "include",
+		}).then((response) => {
+			takeResponseAndCheckForUnauthenticated(response);
+			return response;
+		});
+	};
+
 	const takeResponseAndCheckForUnauthenticated = (response: Response) => {
 		if (response.status === 403 || response.status === 401) {
 			checkIfLoggedIn();
@@ -73,6 +83,7 @@ const Login = () => {
 		<div>
 			<div onClick={() => getProtected()}>getProtected</div>
 			<div onClick={() => getUnprotected()}>getUnprotected</div>
+			<div onClick={() => getAdmin()}>getAdmin</div>
 			<div onClick={() => getUsers()}>getUsers</div>
 
 			{isLoggedIn ? (
