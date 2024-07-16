@@ -4,23 +4,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.nahajski.baseauth.entity.OauthIssuerSubject;
+import org.nahajski.baseauth.entity.OAuthIssuerSubject;
 import org.nahajski.baseauth.entity.UserEntity;
 import org.nahajski.baseauth.entity.UserRole;
 import org.nahajski.baseauth.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,35 +40,17 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         OIDCProvider oAuthOIDCProvider = OIDCProvider.get(oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
         DefaultOAuth2User principal = (DefaultOAuth2User) oAuth2AuthenticationToken.getPrincipal();
         String subject = principal.getName();
-        OauthIssuerSubject oauthIssuerSubject = new OauthIssuerSubject(oAuthOIDCProvider.toLower(), subject);
-        Optional<UserEntity> optionalUserEntity = userService.find(oauthIssuerSubject);
+        OAuthIssuerSubject oAuthIssuerSubject = new OAuthIssuerSubject(oAuthOIDCProvider, subject);
+        Optional<UserEntity> optionalUserEntity = userService.find(oAuthIssuerSubject);
         var attributes = principal.getAttributes();
-        String email = "";
-        String name = "";
-        if (attributes != null) {
-            Object nullableEmail = attributes.getOrDefault("email", "");
-            if (nullableEmail != null) {
-                email = nullableEmail.toString();
-            }
-
-            Object nullableName = attributes.getOrDefault("name", "");
-            if (nullableName != null) {
-                name = nullableName.toString();
-            }
-        }
+        String email = getNullableAttribute(attributes, "email");
+        String name = getNullableAttribute(attributes, "name");
         if (optionalUserEntity.isPresent()) {
             var userEntity = optionalUserEntity.get();
-            extracted(oAuthOIDCProvider, userEntity.getRole(), attributes);
-            log.info("Name: " + name);
-            log.info("Email: " + email);
+            setSecurityContextAuth(oAuthOIDCProvider, userEntity.getRole(), attributes);
         } else {
-            UserEntity user = new UserEntity();
-            user.setRole(NEW_USER_ROLE);
-            user.setEmail(email);
-            user.setName(name);
-            user.setOauthId(oauthIssuerSubject);
-            userService.saveUser(user);
-            extracted(oAuthOIDCProvider, user.getRole(), attributes);
+            UserEntity user = createAndSaveUser(email, name, oAuthIssuerSubject);
+            setSecurityContextAuth(oAuthOIDCProvider, user.getRole(), attributes);
 
         }
 
@@ -84,11 +62,31 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     }
 
-    private static void extracted(OIDCProvider oAuthProvider, UserRole userRole, Map<String, Object> attributes) {
-        log.info(oAuthProvider + " auth");
-        String authority = userRole.name();
-        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(authority)), attributes, oAuthProvider.getNameAttributeKey());//Find the relevant name attribute key authentication, principal, nameAttributeKey
-        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(authority)), oAuthProvider.toLower());
+    private UserEntity createAndSaveUser(String email, String name, OAuthIssuerSubject oauthIssuerSubject) {
+        UserEntity user = new UserEntity();
+        user.setRole(NEW_USER_ROLE);
+        user.setEmail(email);
+        user.setName(name);
+        user.setOauthId(oauthIssuerSubject);
+        userService.saveUser(user);
+        return user;
+    }
+
+    private static String getNullableAttribute(Map<String, Object> attributes, String attribute) {
+        String email = "";
+        if (attributes != null) {
+            Object nullableAttribute = attributes.getOrDefault(attribute, "");
+            if (nullableAttribute != null) {
+                email = nullableAttribute.toString();
+            }
+        }
+        return email;
+    }
+
+    private static void setSecurityContextAuth(OIDCProvider oAuthProvider, UserRole userRole, Map<String, Object> attributes) {
+        log.info("logged in with %s OIDC auth".formatted(oAuthProvider));
+        DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(userRole), attributes, oAuthProvider.getNameAttributeKey());//Find the relevant name attribute key authentication, principal, nameAttributeKey
+        Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(userRole), oAuthProvider.toLower());
         SecurityContextHolder.getContext().setAuthentication(securityAuth);
     }
 }

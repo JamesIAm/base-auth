@@ -10,7 +10,7 @@ import lombok.Data;
 public class UserEntity {
 
     @EmbeddedId
-    OauthIssuerSubject oauthId;
+    OAuthIssuerSubject oauthId;
 
     String email;
     String name;

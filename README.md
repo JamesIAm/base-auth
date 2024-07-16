@@ -2,6 +2,7 @@
 - Return the user details to the frontend (name and email)
 - Get email from github
 - Create a create react app version for SPA's
+- Add admin only endpoint
 
 
 ## Running Instructions
@@ -12,6 +13,12 @@
 
 ```pnpm -C frontend dev```
 
+## Setup instructions
+### Package
+1. Refactor rename baseauth to something else
+2. Go into settings.gradle and change the rootProject.name
+
+### OAuth2 OIDC providers
 Create a file called `.env.secret` in the same director as the readme
 It's contents should be as follows:
 ```properties

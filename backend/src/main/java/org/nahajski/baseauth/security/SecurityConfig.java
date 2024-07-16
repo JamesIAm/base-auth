@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> {
                     exception.authenticationEntryPoint(new FailedAuthResponse());
                 })
-                .logout(logout -> logout.logoutSuccessHandler((new LogoutResponse())))
+                .logout(logout -> logout.logoutSuccessHandler(new LogoutResponse()))
 
         ;
 

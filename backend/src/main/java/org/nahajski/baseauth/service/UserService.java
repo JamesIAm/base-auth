@@ -1,6 +1,6 @@
 package org.nahajski.baseauth.service;
 
-import org.nahajski.baseauth.entity.OauthIssuerSubject;
+import org.nahajski.baseauth.entity.OAuthIssuerSubject;
 import org.nahajski.baseauth.entity.UserEntity;
 import org.nahajski.baseauth.repository.UserEntityRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class UserService {
         userEntityRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> find(OauthIssuerSubject issuerSubject) {
+    public Optional<UserEntity> find(OAuthIssuerSubject issuerSubject) {
         return userEntityRepository.findById(issuerSubject);
     }
 }
