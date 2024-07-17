@@ -6,6 +6,11 @@
 - Add DTOs and DAOs
 - Publish to mvnrepo
 - Set up auto changelog and version increments
+- Add tests for various types of attempted breach
+  - CSRF
+  - Role validation
+  - Authenticated endpoints
+  - Wrong origin or request
 
 ## Running Instructions
 #### Start the backend
