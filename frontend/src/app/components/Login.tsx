@@ -1,4 +1,6 @@
 "use client";
+import { post } from "./BackendClient";
+import { getCookie } from "./cookie/Cookie";
 import React, { useEffect, useState } from "react";
 
 const Login = () => {
@@ -16,14 +18,7 @@ const Login = () => {
 	};
 
 	const logout = async () => {
-		const response = await fetch("http://localhost:8080/logout", {
-			method: "POST",
-			credentials: "include",
-		}).then((res) => {
-			checkIfLoggedIn();
-			return res;
-		});
-		console.log(response);
+		post("/logout");
 	};
 
 	const getProtected = async () => {
@@ -75,6 +70,10 @@ const Login = () => {
 		});
 	};
 
+	const postTest = async () => {
+		post("/test");
+	};
+
 	const takeResponseAndCheckForUnauthenticated = (response: Response) => {
 		if (response.status === 403 || response.status === 401) {
 			checkIfLoggedIn();
@@ -96,6 +95,8 @@ const Login = () => {
 			<div onClick={() => getAdmin()}>getAdmin</div>
 			<div onClick={() => getUsers()}>getUsers</div>
 			<div onClick={() => getUserInfo()}>getUserInfo</div>
+			<div onClick={() => postTest()}>postTest</div>
+			<div onClick={() => getCookie("XSRF-TOKEN")}>get cookie</div>
 
 			{isLoggedIn ? (
 				<div onClick={() => logout()}>logout</div>
