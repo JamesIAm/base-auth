@@ -15,4 +15,8 @@ const getCookie = (desiredCookie: string) => {
 	return value;
 };
 
-export { getCookie };
+const checkIfLoggedIn = () => {
+	return document.cookie.includes("logged-in=true");
+};
+
+export { getCookie, checkIfLoggedIn };

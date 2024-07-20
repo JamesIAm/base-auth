@@ -1,13 +1,11 @@
 "use client";
-import { post } from "./BackendClient";
-import { getCookie } from "./cookie/Cookie";
+// import { getCookie } from "./cookie/Cookie";
 import React, { useEffect, useState } from "react";
+import { get, post } from "base-auth-client";
+import { headers } from "next/headers";
 
 const Login = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const login = async () => {
-		document.location = "http://localhost:8080/login";
-	};
 
 	const loginWithGithub = async () => {
 		document.location = "http://localhost:8080/oauth2/authorization/github";
@@ -22,55 +20,41 @@ const Login = () => {
 	};
 
 	const getProtected = async () => {
-		const response = await fetch("http://localhost:8080/protected", {
-			method: "GET",
-			credentials: "include",
-		}).then((response) => {
+		get("http://localhost:8080/protected").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
-	const getUnprotected = async () => {
-		const response = await fetch("http://localhost:8080/public", {
-			method: "GET",
-		}).then((response) => {
+	const getUnprotected = () => {
+		get("http://localhost:8080/public").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
-	const getUsers = async () => {
-		const response = await fetch("http://localhost:8080/users", {
-			method: "GET",
-			credentials: "include",
-		}).then((response) => {
+	const getUsers = () => {
+		get("http://localhost:8080/users").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
-	const getAdmin = async () => {
-		const response = await fetch("http://localhost:8080/admin/asd", {
-			method: "GET",
-			credentials: "include",
-		}).then((response) => {
+	const getAdmin = () => {
+		get("http://localhost:8080/admin/asd").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
-	const getUserInfo = async () => {
-		const response = await fetch("http://localhost:8080/userinfo", {
-			method: "GET",
-			credentials: "include",
-		}).then((response) => {
+	const getUserInfo = () => {
+		get("http://localhost:8080/userinfo").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
-	const postTest = async () => {
+	const postTest = () => {
 		post("/test");
 	};
 
@@ -87,6 +71,7 @@ const Login = () => {
 	useEffect(() => {
 		checkIfLoggedIn();
 	}, []);
+	// <div onClick={() => getCookie("XSRF-TOKEN")}>get cookie</div>
 
 	return (
 		<div>
@@ -96,7 +81,6 @@ const Login = () => {
 			<div onClick={() => getUsers()}>getUsers</div>
 			<div onClick={() => getUserInfo()}>getUserInfo</div>
 			<div onClick={() => postTest()}>postTest</div>
-			<div onClick={() => getCookie("XSRF-TOKEN")}>get cookie</div>
 
 			{isLoggedIn ? (
 				<div onClick={() => logout()}>logout</div>
