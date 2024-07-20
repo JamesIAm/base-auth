@@ -1,6 +1,6 @@
 {
 	"name": "base-auth",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
@@ -14,7 +14,7 @@
 		"next-auth": "^4.24.7",
 		"react": "^18",
 		"react-dom": "^18",
-		"base-auth-client": "/home/jamesiam/workspace/base-auth/frontend-library/dist/base-auth-client-1.0.0.tgz"
+		"base-auth-client": "^1"
 	},
 	"devDependencies": {
 		"@types/node": "^20",

@@ -12,8 +12,8 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2
       base-auth-client:
-        specifier: /home/jamesiam/workspace/base-auth/frontend-library/dist/base-auth-client-1.0.0.tgz
-        version: file:../frontend-library/dist/base-auth-client-1.0.0.tgz
+        specifier: ^1
+        version: 1.0.0
       next:
         specifier: 14.2.5
         version: 14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -321,9 +321,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  base-auth-client@file:../frontend-library/dist/base-auth-client-1.0.0.tgz:
-    resolution: {integrity: sha512-9SKsA5q2H6//fNBXa7MVCxvsMYOWRn2+HOOdu7IddYh2Ibl4HgAQCYuOeUN0SUXEQx0D5GVHhs9PDP7qsI9VNQ==, tarball: file:../frontend-library/dist/base-auth-client-1.0.0.tgz}
-    version: 1.0.0
+  base-auth-client@1.0.0:
+    resolution: {integrity: sha512-9EnWEMwkTvlhfve+XzfYhz41VMbUQGiKYDImgd79Q+7n7+JO6vjEooDcGxKDpc0Xu9/PlUPdosJZOUvsgyu3OA==}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -1735,7 +1734,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  base-auth-client@file:../frontend-library/dist/base-auth-client-1.0.0.tgz: {}
+  base-auth-client@1.0.0: {}
 
   brace-expansion@1.1.11:
     dependencies:

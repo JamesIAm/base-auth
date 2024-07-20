@@ -1,30 +1,35 @@
 import { getCookie } from "./cookie";
 
-const post = async (
-	url: string,
-	headers?: RequestInit["headers"],
-	body?: RequestInit["body"]
-) => {
+type HeadersProps = {
+	headers?: RequestInit["headers"];
+};
+
+interface PostProps extends HeadersProps {
+	body?: object;
+}
+
+const post = (url: string, props?: PostProps) => {
 	let headersWithCsrf = {
-		...headers,
+		...props?.headers,
 		"X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
 	};
-	const response = await fetch("http://localhost:8080" + url, {
+	let requestParams: RequestInit = {
 		method: "POST",
 		credentials: "include",
 		headers: headersWithCsrf,
-		body: body,
-	});
-	return response;
+	};
+	if (props?.body) {
+		requestParams = { ...requestParams, body: JSON.stringify(props.body) };
+	}
+	return fetch("http://localhost:8080" + url, requestParams);
 };
 
-const get = async (url: string, headers?: RequestInit["headers"]) => {
-	const response = await fetch("http://localhost:8080" + url, {
+const get = (url: string, props?: HeadersProps) => {
+	return fetch("http://localhost:8080" + url, {
 		method: "GET",
 		credentials: "include",
-		headers: headers,
+		headers: props?.headers,
 	});
-	return response;
 };
 
 export { post, get };

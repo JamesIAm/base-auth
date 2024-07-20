@@ -16,46 +16,47 @@ const Login = () => {
 	};
 
 	const logout = async () => {
-		post("/logout");
+		post("/logout").then((_unused) => checkIfLoggedIn());
 	};
 
 	const getProtected = async () => {
-		get("http://localhost:8080/protected").then((response) => {
+		get("/protected").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
 	const getUnprotected = () => {
-		get("http://localhost:8080/public").then((response) => {
+		get("/public").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
 	const getUsers = () => {
-		get("http://localhost:8080/users").then((response) => {
+		get("/users").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
 	const getAdmin = () => {
-		get("http://localhost:8080/admin/asd").then((response) => {
+		get("/admin/asd").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
 	const getUserInfo = () => {
-		get("http://localhost:8080/userinfo").then((response) => {
+		get("/userinfo").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
 	};
 
 	const postTest = () => {
-		post("/test");
+		let bodyContent = { ads: "asd" };
+		post("/test", { body: bodyContent });
 	};
 
 	const takeResponseAndCheckForUnauthenticated = (response: Response) => {
