@@ -2,10 +2,17 @@ plugins {
 	id 'java'
 	id 'io.spring.dependency-management' version '1.1.5'
 	id 'java-library'
+	id 'maven-publish'
+	id 'signing'
 }
 
 group = 'org.nahajski'
-version = '0.0.1'
+version = '0.0.4'
+archivesBaseName = "baseauth"
+
+jar {
+	enabled = true
+}
 
 
 java {
@@ -43,4 +50,72 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register('javadocJar', Jar) {
+	archiveClassifier = 'javadoc'
+	from javadoc
+}
+
+tasks.register('sourcesJar', Jar) {
+	archiveClassifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+
+publishing {
+	publications {
+		BaseAuth(MavenPublication) {
+			artifactId = 'base-auth'
+			from components.java
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
+			pom {
+				name = 'Base Auth'
+				description = 'An implementation of Spring OAuth2 Client with some defaults configured for convenience'
+				url = 'https://github.com/JamesIAm/base-auth'
+				licenses {
+					license {
+						name = 'GNU GENERAL PUBLIC LICENSE v3.0'
+						url = 'https://www.gnu.org/licenses/gpl-3.0.en.html#'
+					}
+				}
+				developers {
+					developer {
+						id = 'JamesIAm'
+						name = 'James Nahajski'
+						email = 'james.nahajski@gmail.com'
+					}
+				}
+				scm {
+					connection = 'scm:git:https://github.com/JamesIAm/base-auth'
+					url = 'https://github.com/JamesIAm/base-auth'
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			name = "ossrh"
+			// change URLs to point to your repos, e.g. http://my.org/repo
+			def releasesRepoUrl = ('https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/')
+			def snapshotsRepoUrl = ('https://s01.oss.sonatype.org/content/repositories/snapshots')
+			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+			authentication {}
+		}
+	}
+}
+
+signing {
+	sign publishing.publications.BaseAuth
 }
