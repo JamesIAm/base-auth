@@ -12,7 +12,7 @@ run `pnpm -C frontend install` to update the node module
 run `pnpm -C frontend dev` to run the app
 
 ```shell
-pnpm -C frontend-client compile
+pnpm -C frontend-library compile
 pnpm -C frontend install
 pnpm -C frontend dev
 ```
