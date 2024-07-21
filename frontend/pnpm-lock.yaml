@@ -12,8 +12,8 @@ importers:
         specifier: ^1.7.2
         version: 1.7.2
       base-auth-client:
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.1
+        version: 1.1.1
       next:
         specifier: 14.2.5
         version: 14.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -321,8 +321,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  base-auth-client@1.1.0:
-    resolution: {integrity: sha512-mighqzeebDc/AHmHr1YdBUOFEg+o5fRszQduGJEQJYywo2kWJaLmAnlLsCrMW1+cIwKVPfbt+FHssP5zV0ULkg==}
+  base-auth-client@1.1.1:
+    resolution: {integrity: sha512-hKuKBT3Q+rw6nPDvrawbjWBdKZ6emqEQ7RjwLLAThrn+0S5aB9YiTFPUYKTrh63FS4zcvv+EZz9FtHT1kw0qxA==}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -1734,7 +1734,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  base-auth-client@1.1.0: {}
+  base-auth-client@1.1.1: {}
 
   brace-expansion@1.1.11:
     dependencies:

@@ -1,6 +1,6 @@
 {
 	"name": "base-auth-client",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"description": "A client to assist in the use of the base auth backend",
 	"main": "index.js",
 	"types": "index.d.ts",
@@ -15,7 +15,7 @@
 		"url": "git+https://github.com/JamesIAm/base-auth.git"
 	},
 	"author": "James Nahajski",
-	"license": "ISC",
+	"license": "Apache-2.0",
 	"bugs": {
 		"url": "https://github.com/JamesIAm/base-auth/issues"
 	},
