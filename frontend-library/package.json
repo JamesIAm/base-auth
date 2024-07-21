@@ -1,13 +1,13 @@
 {
 	"name": "base-auth-client",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "A client to assist in the use of the base auth backend",
 	"main": "index.js",
 	"types": "index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"compile": "pnpm tsc && cp package.json ./dist",
-		"package": "cd dist && pnpm pack",
+		"compile": "rm -r ./dist && pnpm tsc && cp package.json ./dist",
+		"package": "cd dist && pnpm pack --pack-destination=\"../bin\"",
 		"release": "pnpm compile && cd dist && pnpm publish --access=public"
 	},
 	"repository": {
