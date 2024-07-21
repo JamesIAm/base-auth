@@ -5,6 +5,7 @@
     </option>
     <option name="MAIN_CLASS_NAME" value="org.nahajski.example.Main" />
     <module name="example.main" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/example-backend" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="org.nahajski.example.*" />

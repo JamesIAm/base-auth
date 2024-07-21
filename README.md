@@ -58,7 +58,7 @@ public class Main {
 ```yaml
 baseauth:
   frontend:
-    url: http://localhost:3000
+    url: http://localhost:5173
   pattern:
     unauthenticated: "/public/**"
     admin: "/admin/**"
@@ -83,7 +83,7 @@ baseauth:
   frontend:
     url: <FRONTEND_URL>
 ```
-For testing `<FRONTEND_URL>` will likely be `http://localhost:3000`
+For testing `<FRONTEND_URL>` will likely be `http://localhost:5173`
 
 ##### TODO: database readme
 rn solution is add this too application.yaml:

@@ -11,13 +11,6 @@ public class UnprotectedController {
         return "Hello from an unprotected endpoint";
     }
 
-
-    @PostMapping("/public/test")
-    private String testingCsrf() {
-        System.out.println("Made it to public CSRF method");
-        return "";
-    }
-
     @PostMapping("/public/test")
     private String testingPublicPost() {
         System.out.println("Made a public post");
