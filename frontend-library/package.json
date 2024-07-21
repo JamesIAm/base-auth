@@ -7,7 +7,6 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"compile": "rm -r ./dist && pnpm tsc && cp package.json ./dist",
-		"package": "pnpm compile && cd dist && pnpm pack --pack-destination=\"../bin\"",
 		"release": "pnpm compile && cd dist && pnpm publish --access=public"
 	},
 	"repository": {

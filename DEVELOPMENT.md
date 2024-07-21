@@ -6,8 +6,17 @@ maven repo, run `./backend/gradlew publishToMavenLocal -p backend
 `
 ## Releasing the frontend
 ### Releasing locally
-Run `pnpm package`
-Update the version in frontend to match the filepath `$PROJECT_ROOT/frontend-library/bin/??`
+Run `pnpm -C frontend-client compile` from frontend-client to generate the up-to-date files
+Update the version in frontend package.json to match the filepath `"base-auth-client": "../frontend-library/dist"`
+run `pnpm -C frontend install` to update the node module
+run `pnpm -C frontend dev` to run the app
+
+```shell
+pnpm -C frontend-client compile
+pnpm -C frontend install
+pnpm -C frontend dev
+```
 ### Releasing to npm
+Make sure everything is commited and pushed to origin
 Run `pnpm version patch` or `pnpm version minor` or `pnpm version major`
 Then run `pnpm release`

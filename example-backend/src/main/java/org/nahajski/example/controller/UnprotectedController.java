@@ -17,4 +17,10 @@ public class UnprotectedController {
         System.out.println("Made it to public CSRF method");
         return "";
     }
+
+    @PostMapping("/public/test")
+    private String testingPublicPost() {
+        System.out.println("Made a public post");
+        return "";
+    }
 }

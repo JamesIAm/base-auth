@@ -51,7 +51,9 @@ public class SecurityConfig {
                 .addFilterAfter(new CsrfCookieFilter(), OAuth2LoginAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(
-                        authorise -> authorise.requestMatchers(adminPattern).hasRole(UserRole.ADMIN.toString())
+                        authorise -> authorise
+                                .requestMatchers("/public/userinfo").permitAll()
+                                .requestMatchers(adminPattern).hasRole(UserRole.ADMIN.toString())
                                 .requestMatchers(unauthenticatedPattern).permitAll()
                                 .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> {

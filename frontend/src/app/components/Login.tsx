@@ -48,7 +48,7 @@ const Login = () => {
 	};
 
 	const getUserInfo = () => {
-		get("/userinfo").then((response) => {
+		get("/public/userinfo").then((response) => {
 			takeResponseAndCheckForUnauthenticated(response);
 			return response;
 		});
@@ -57,6 +57,10 @@ const Login = () => {
 	const postTest = () => {
 		let bodyContent = { ads: "asd" };
 		post("/test", { body: bodyContent });
+	};
+
+	const postPublic = () => {
+		post("/public/test");
 	};
 
 	const takeResponseAndCheckForUnauthenticated = (response: Response) => {
@@ -81,7 +85,9 @@ const Login = () => {
 			<div onClick={() => getAdmin()}>getAdmin</div>
 			<div onClick={() => getUsers()}>getUsers</div>
 			<div onClick={() => getUserInfo()}>getUserInfo</div>
+
 			<div onClick={() => postTest()}>postTest</div>
+			<div onClick={() => postPublic()}>postPublic</div>
 
 			{isLoggedIn ? (
 				<div onClick={() => logout()}>logout</div>
