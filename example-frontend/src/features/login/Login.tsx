@@ -2,8 +2,11 @@
 // import { getCookie } from "./cookie/Cookie";
 import { useEffect, useState } from "react"
 import { get, post } from "base-auth-client"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import { checkIsLoggedIn, selectIsLoggedIn } from "./loginSlice"
 const Login = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const dispatch = useAppDispatch()
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
 
   const loginWithGithub = async () => {
     document.location = "http://localhost:8080/oauth2/authorization/github"
@@ -14,7 +17,7 @@ const Login = () => {
   }
 
   const logout = async () => {
-    post("/logout").then(_unused => checkIfLoggedIn())
+    post("/logout").then(_unused => dispatch(checkIsLoggedIn()))
   }
 
   const getProtected = async () => {
@@ -63,17 +66,9 @@ const Login = () => {
 
   const takeResponseAndCheckForUnauthenticated = (response: Response) => {
     if (response.status === 403 || response.status === 401) {
-      checkIfLoggedIn()
+      dispatch(checkIsLoggedIn())
     }
   }
-
-  const checkIfLoggedIn = () => {
-    setIsLoggedIn(document.cookie.includes("logged-in=true"))
-  }
-
-  useEffect(() => {
-    checkIfLoggedIn()
-  }, [])
   // <div onClick={() => getCookie("XSRF-TOKEN")}>get cookie</div>
 
   return (
