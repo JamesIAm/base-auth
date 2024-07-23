@@ -4,13 +4,14 @@ import { Provider } from "react-redux"
 import App from "./App"
 import { store } from "./app/store"
 import "./index.css"
-import { injectStore } from "base-auth-client"
+import { injectStore, injectBackendUrl } from "base-auth-client"
 
 const container = document.getElementById("root")
 
 if (container) {
   const root = createRoot(container)
   injectStore(store)
+  injectBackendUrl(import.meta.env.VITE_BACKEND_URL)
   root.render(
     <React.StrictMode>
       <Provider store={store}>
