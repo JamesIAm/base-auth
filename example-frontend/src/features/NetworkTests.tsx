@@ -1,24 +1,9 @@
 "use client"
-// import { getCookie } from "./cookie/Cookie";
-import { useEffect, useState } from "react"
 import { get, post } from "base-auth-client"
-import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { checkIsLoggedIn, selectIsLoggedIn } from "./loginSlice"
-const Login = () => {
+import { useAppDispatch } from "../app/hooks"
+import { checkIsLoggedIn } from "base-auth-client/login"
+const NetworkTests = () => {
   const dispatch = useAppDispatch()
-  const isLoggedIn = useAppSelector(selectIsLoggedIn)
-
-  const loginWithGithub = async () => {
-    document.location = "http://localhost:8080/oauth2/authorization/github"
-  }
-
-  const loginWithGoogle = async () => {
-    document.location = "http://localhost:8080/oauth2/authorization/google"
-  }
-
-  const logout = async () => {
-    post("/logout").then(_unused => dispatch(checkIsLoggedIn()))
-  }
 
   const getProtected = async () => {
     get("/protected").then(response => {
@@ -81,17 +66,8 @@ const Login = () => {
 
       <div onClick={() => postTest()}>postTest</div>
       <div onClick={() => postPublic()}>postPublic</div>
-
-      {isLoggedIn ? (
-        <div onClick={() => logout()}>logout</div>
-      ) : (
-        <>
-          <div onClick={() => loginWithGithub()}>loginWithGithub</div>
-          <div onClick={() => loginWithGoogle()}>loginWithGoogle</div>
-        </>
-      )}
     </div>
   )
 }
 
-export default Login
+export default NetworkTests

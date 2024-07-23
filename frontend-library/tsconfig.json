@@ -1,9 +1,15 @@
 {
 	"compilerOptions": {
+		"jsx": "preserve",
 		"module": "ESNext",
 		"target": "ESNext",
 		"declaration": true,
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"moduleResolution": "bundler",
+		"baseUrl": "."
+		// "paths": {
+		// 	// "@reduxjs/toolkit": ["node_modules/@reduxjs/toolkit/"]
+		// }
 	},
 	"include": ["src/**/*"]
 }
