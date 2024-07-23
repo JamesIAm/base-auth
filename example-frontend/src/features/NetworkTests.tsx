@@ -1,43 +1,27 @@
 "use client"
 import { get, post } from "base-auth-client"
 import { useAppDispatch } from "../app/hooks"
-import { checkIsLoggedIn } from "base-auth-client/login"
 const NetworkTests = () => {
   const dispatch = useAppDispatch()
 
   const getProtected = async () => {
-    get("/protected").then(response => {
-      takeResponseAndCheckForUnauthenticated(response)
-      return response
-    })
+    get("/protected")
   }
 
   const getUnprotected = () => {
-    get("/public").then(response => {
-      takeResponseAndCheckForUnauthenticated(response)
-      return response
-    })
+    get("/public")
   }
 
   const getUsers = () => {
-    get("/users").then(response => {
-      takeResponseAndCheckForUnauthenticated(response)
-      return response
-    })
+    get("/users")
   }
 
   const getAdmin = () => {
-    get("/admin/asd").then(response => {
-      takeResponseAndCheckForUnauthenticated(response)
-      return response
-    })
+    get("/admin/asd")
   }
 
   const getUserInfo = () => {
-    get("/public/userinfo").then(response => {
-      takeResponseAndCheckForUnauthenticated(response)
-      return response
-    })
+    get("/public/userinfo")
   }
 
   const postTest = () => {
@@ -47,12 +31,6 @@ const NetworkTests = () => {
 
   const postPublic = () => {
     post("/public/test")
-  }
-
-  const takeResponseAndCheckForUnauthenticated = (response: Response) => {
-    if (response.status === 403 || response.status === 401) {
-      dispatch(checkIsLoggedIn())
-    }
   }
   // <div onClick={() => getCookie("XSRF-TOKEN")}>get cookie</div>
 
