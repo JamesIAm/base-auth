@@ -1,3 +1,8 @@
+Licenses
+Parts of this repo have been pulled from other sources, please see all included LICENSE.md files
+- [Frontend Library](./frontend-library/LICENSE.md)
+- [Example Frontend](./example-frontend/LICENSE.md)
+
 ## TODO
 - Get email from github
 - Create a create react app version for SPA's
